@@ -106,6 +106,33 @@ class SMS_BY
         $params['phone'] = $phone;
         return $this->sendRequest('sendSms', $params);
     }
+    
+    /**
+     * Метод-обёртка для команды sendSms
+     * message - Текст созданного сообщения
+     * phone - номер телефона в международном формате [country-code][operator][number], пример: 79061234567
+     *
+     *  A method to send quick sms message, usually used in case you need single at a time.   
+     *  @param String message An sms message 
+     *  @param String phone   Phone number, for example: 18434481706
+     *  @return String Sample output: {"sms_id":2197871,"status":"NEW"}
+     *  
+     */
+
+    public function sendQuickSms($message, $phone)
+    {
+      if(!empty($message) && !empty($phone))
+      {
+        $params['message'] = $message;
+        $params['phone'] = $phone;
+        return $this->sendRequest('sendQuickSms', $params);
+        
+      }
+      else
+      {
+         return null;
+      }
+    }
 
     /**
      * Метод-обёртка для команды checkSMS
