@@ -1,5 +1,4 @@
 <?php
-
 class SMS_BY
 {
     private $token;
@@ -26,23 +25,34 @@ class SMS_BY
      * token в $params передавать не нужно.
      * Необязательный параметр, так как для таких команд, как getLimit, getMessagesList, getPasswordObjects никаких параметров передавать не нужно.
      */
-    private function sendRequest($command, $params = array())
+    private function sendRequest($command, $params = array(), $method = 'get')
     {
-        $url = $this->API_URL . $command . '?token=' . $this->token;
-        if (!empty($params)) {
-            foreach ($params as $k => $v)
-                $url .= '&' . $k . '=' . urlencode($v);
+        if ($method=='get') {
+            $url = $this->API_URL . $command . '?token=' . $this->token;
+            if (!empty($params)) {
+                foreach ($params as $k => $v)
+                    $url .= '&' . $k . '=' . urlencode($v);
+            }
+        }
+        else {
+            $url = $this->API_URL . $command;
         }
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+        if ($method=='post') {
+          $params['token'] = $this->token;
+          curl_setopt($ch, CURLOPT_POST, 1);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        }
         $result = curl_exec($ch);
         curl_close($ch);
         $result = json_decode($result);
         if (isset($result->error)) {
             $this->error($result->error);
             return false;
-        } else
+        }
+        else
             return $result;
     }
 
@@ -54,6 +64,14 @@ class SMS_BY
     private function error($error)
     {
         trigger_error("<b>SMS.BY error:</b> $error");
+    }
+
+    /**
+     * Метод-обёртка для команды getBalance
+     */
+    public function getBalance()
+    {
+        return $this->sendRequest("getBalance");
     }
 
     /**
@@ -106,17 +124,17 @@ class SMS_BY
         $params['phone'] = $phone;
         return $this->sendRequest('sendSms', $params);
     }
-    
+
     /**
      * Метод-обёртка для команды sendSms
      * message - Текст созданного сообщения
      * phone - номер телефона в международном формате [country-code][operator][number], пример: 79061234567
      *
-     *  A method to send quick sms message, usually used in case you need single at a time.   
-     *  @param String message An sms message 
+     *  A method to send quick sms message, usually used in case you need single at a time.
+     *  @param String message An sms message
      *  @param String phone   Phone number, for example: 18434481706
      *  @return String Sample output: {"sms_id":2197871,"status":"NEW"}
-     *  
+     *
      */
 
     public function sendQuickSms($message, $phone)
@@ -126,7 +144,7 @@ class SMS_BY
         $params['message'] = $message;
         $params['phone'] = $phone;
         return $this->sendRequest('sendQuickSms', $params);
-        
+
       }
       else
       {
@@ -232,20 +250,37 @@ class SMS_BY
         return $this->sendRequest('getAlphanameId', $params);
     }
 
-
-    /*
-        Метод возращает латиницу по русскому тексту из параметра $string
-
-    */
-
-
-
-    public function getBalance ()
+    /**
+     * Метод-обёртка для команды flashCall
+     * $phone - номер телефона в формате 375291234567
+     * $code - код подтверждения, если не указан сгенерируется автоматически
+     * $attempt - количество попыток для подтверждения кода, если не указано то 3
+     * $time_valid - время действия кода подтверждения в секундах, если не указано то 90
+     */
+    public function flashCall($phone, $code = '', $attempt = 0, $time_valid = 0)
     {
-        return $this->sendRequest("getBalance");
-
+        $params['phone'] = $phone;
+        if (!empty($code))
+            $params['code'] = $code;
+        if (!empty($attempt))
+            $params['attempt'] = (integer)$attempt;
+        if (!empty($time_valid))
+            $params['time_valid'] = (integer)$time_valid;
+        return $this->sendRequest('flashCall', $params, 'post');
     }
 
-
+    /**
+     * Метод-обёртка для команды confirmFlashCall
+     * $phone - номер телефона в формате 375291234567
+     * $code - код подтверждения
+     * $fclid - значение fclid из метода flashCall
+     */
+    public function confirmFlashCall($phone, $code, $fclid)
+    {
+        $params['phone'] = $phone;
+        $params['code'] = $code;
+        $params['fclid'] = $fclid;
+        return $this->sendRequest('confirmFlashCall', $params, 'post');
+    }
 
 }
