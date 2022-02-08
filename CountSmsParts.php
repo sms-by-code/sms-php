@@ -1,22 +1,19 @@
 <?php
-
 /**
 *     Класс для подсчета длины смс, а также кол-ва частей в смс сообщении.
-*
-*
-*
 */
 
 class CountSmsParts
 {
+    public function __construct() {}
 
-    protected function charCodeAt($str, $num)
-    {
+
+    protected function charCodeAt($str, $num) {
         return $this->utf8_ord($this->utf8_charAt($str, $num));
     }
 
-    protected function utf8_ord($ch)
-    {
+
+    protected function utf8_ord($ch) {
         $len = strlen($ch);
         if ($len <= 0) return false;
         $h = ord($ch{0});
@@ -28,15 +25,13 @@ class CountSmsParts
         return false;
     }
 
-    protected function utf8_charAt($str, $num)
-    {
+
+    protected function utf8_charAt($str, $num) {
         return mb_substr($str, $num, 1, 'UTF-8');
     }
 
 
-    public function countSmsParts($text)
-    {
-
+    public function countSmsParts($text) {
         $cutStrLength = 0;
         $s = [
             "cut" => true,
@@ -77,7 +72,6 @@ class CountSmsParts
                     $smsLength += 1;
             }
 
-            //!isUnicode && text.charCodeAt(charPos) > 127 && text[charPos] != "€" && (isUnicode = true)
             if ($this->charCodeAt($text, $charPos) > 127 && $text[$charPos] != "€")
                 $isUnicode = true;
         }
@@ -97,8 +91,8 @@ class CountSmsParts
         return $smsCount;
     }
 
-    public function checkTextLength($text)
-    {
+
+    public function checkTextLength($text) {
         $cutStrLength = 0;
         $s = [
             "cut" => true,

@@ -1,13 +1,7 @@
 <?php
-
-
-
-
 class Transliterate
 {
-
-    public static function getTransliteration($text)
-    {
+    public static function getTransliteration($text) {
         $converter = self::converter();
         $str = strtr($text, $converter);
 
@@ -22,8 +16,7 @@ class Transliterate
     }
 
 
-    private static function converter()
-    {
+    private static function converter() {
         return [
             'а' => 'a',   'б' => 'b',   'в' => 'v',
             'г' => 'g',   'д' => 'd',   'е' => 'e',
@@ -50,4 +43,5 @@ class Transliterate
             'Э' => 'E',   'Ю' => 'Yu',  'Я' => 'Ya',
         ];
     }
+
 }

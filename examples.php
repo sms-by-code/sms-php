@@ -6,16 +6,15 @@
   $token = '';  // Код токена вы можете получить здесь: https://app.sms.by/user-api/token
   $phone = '';  // Номер телефона для теста
 
-
-  $text    = "Заглавная буква в начале текста";
+  $text = "Заглавная буква в начале текста";
   $comment = "Пример работы транслитерации строки. \"$text\" ";
   $translit = Transliterate::getTransliteration($text);
-  _echo($comment,$translit);
+  _echo($comment, $translit);
 
-  $text    = "прописная буква в начале текста";
+  $text = "прописная буква в начале текста";
   $comment = "Пример работы транслитерации строки. \"$text\" ";
   $translit = Transliterate::getTransliteration($text);
-  _echo($comment,$translit);
+  _echo($comment, $translit);
 
 
   $string = "Длина этого короткого текста на русском  примерно 70 символов или около того"  ;
@@ -29,7 +28,7 @@
   /** баланс */
   $sms = new SMS_BY($token);
   $res = $sms->getBalance();
-  _echo("Получаем баланс", "Баланс: " . $res->result[0]->balance . " ". $res->currency);
+  _echo("Получаем баланс", "Баланс = " . $res->result[0]->balance . " ". $res->currency);
 
   /** Отправка простого сообщения */
   if(false) {
@@ -38,7 +37,6 @@
     $res = $sms->createSMSMessage($message);
     $message_id = $res->message_id;
     $res = $sms->sendSms($message_id, $phone);
-
     if ($res == false)
       _echo ("Во время отправки сообщения произошла ошибка" );
     else
@@ -60,7 +58,7 @@
       _echo("Сообщение успешно отправлено, его ID: {$res[0]->sms_id}");
   }
 
-  /**  Получение списка своих сообщений: */
+  /**  Получение списка своих сообщений */
   if (false) {
     $messages = $sms->getMessagesList();
     echo "<pre>";
@@ -68,7 +66,7 @@
     echo "</pre>";
   }
 
-  /**  Получение списка Альфа-имен с ID */
+  /**  Получение списка альфа-имён */
   if (false) {
     $alpha_names = $sms->getAlphaNames();
     echo "<pre>";
@@ -78,7 +76,7 @@
 
   /**  Получение ID Альфа имени */
   if (false) {
-    $name = '0'; // Ваше Альфа-имя
+    $name = '0'; // Ваше альфа-имя
     $alphaNameId = $sms->getAlphaNameId($name);
     echo "<pre>";
     print_r($alphaNameId);
@@ -102,12 +100,39 @@
       _echo("Во время создания FlashCall произошла ошибка");
   }
 
+  /**  Получение списка viber-имён */
+  if (false) {
+    $viver_names = $sms->getVibernames();
+    echo "<pre>";
+    print_r($viver_names);
+    echo "</pre>";
+  }
+
+  /** Отправка простого viber-сообщения */
+  if(false) {
+    $message = 'Привет от sms.by!';
+    $vibername_id = 0;  // ID вашего viber-имени
+    $res = $sms->sendQuickViberMessage($phone, $vibername_id, $message);
+    if (isset($res->status) and $res->status=='OK')
+      _echo("Отправка sms-сообщения '$message' на номер: $phone", "Сообщение успешно отправлено, его ID: {$res->result->viber_id}");
+    else
+      _echo("Отправка sms-сообщения '$message' на номер: $phone", "Во время отправки сообщения произошла ошибка");
+  }
+
+  /**  Получение списка своих viber-сообщений */
+  if (false) {
+    $messages = $sms->getViberMessageList();
+    echo "<pre>";
+    print_r($messages);
+    echo "</pre>";
+  }
+
 
   function _echo($comment, $result="") {
     $web = $_SERVER['REQUEST_METHOD'] ?? false;
     $d = (!$web) ? "\n" : "<br />";
     echo "$d";
-    echo "Действие: $comment $d" ;
+    echo "<b>Действие:</b> $comment $d" ;
     if(!empty($result))
-      echo "Результат: $result $d $d";
+      echo "<b>Результат:</b> $result $d $d";
   }

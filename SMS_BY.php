@@ -7,8 +7,7 @@ class SMS_BY
     /**
      * $token - API ключ
      */
-    public function __construct($token)
-    {
+    public function __construct($token) {
        if (!empty($token))
           $this->token = $token;
       else {
@@ -25,8 +24,7 @@ class SMS_BY
      * token в $params передавать не нужно.
      * Необязательный параметр, так как для таких команд, как getLimit, getMessagesList, getPasswordObjects никаких параметров передавать не нужно.
      */
-    private function sendRequest($command, $params = array(), $method = 'get')
-    {
+    private function sendRequest($command, $params = array(), $method = 'get') {
         if ($method=='get') {
             $url = $this->API_URL . $command . '?token=' . $this->token;
             if (!empty($params)) {
@@ -61,24 +59,21 @@ class SMS_BY
      * Здесь может быть любой код, обрабатывающий пришедшую по API ошибку, соответствующий вашему приложению.
      * $error - текст ошибки
      */
-    private function error($error)
-    {
+    private function error($error) {
         trigger_error("<b>SMS.BY error:</b> $error");
     }
 
     /**
      * Метод-обёртка для команды getBalance
      */
-    public function getBalance()
-    {
+    public function getBalance() {
         return $this->sendRequest("getBalance");
     }
 
     /**
      * Метод-обёртка для команды getLimit
      */
-    public function getLimit()
-    {
+    public function getLimit() {
         return $this->sendRequest('getLimit');
     }
 
@@ -87,8 +82,7 @@ class SMS_BY
      * $message - текст создаваемого сообщения
      * $alphaname_id - ID альфа-имени, необязательный параметр
      */
-    public function createSMSMessage($message, $alphaname_id = 0)
-    {
+    public function createSMSMessage($message, $alphaname_id = 0) {
         $params['message'] = $message;
         if (!empty($alphaname_id))
             $params['alphaname_id'] = (integer)$alphaname_id;
@@ -99,8 +93,7 @@ class SMS_BY
      * Метод-обёртка для команды checkSMSMessageStatus
      * $message_id - ID созданного сообщения
      */
-    public function checkSMSMessageStatus($message_id)
-    {
+    public function checkSMSMessageStatus($message_id) {
         $params['message_id'] = (integer)$message_id;
         return $this->sendRequest('checkSMSMessageStatus', $params);
     }
@@ -108,8 +101,7 @@ class SMS_BY
     /**
      * Метод-обёртка для команды getMessagesList
      */
-    public function getMessagesList()
-    {
+    public function getMessagesList() {
         return $this->sendRequest('getMessagesList');
     }
 
@@ -118,33 +110,23 @@ class SMS_BY
      * $message_id - ID созданного сообщения
      * $phone - номер телефона в формате 375291234567
      */
-    public function sendSms($message_id, $phone)
-    {
+    public function sendSms($message_id, $phone) {
         $params['message_id'] = (integer)$message_id;
         $params['phone'] = $phone;
         return $this->sendRequest('sendSms', $params);
     }
 
     /**
-     * Метод-обёртка для команды sendSms
-     * message - Текст созданного сообщения
-     * phone - номер телефона в международном формате [country-code][operator][number], пример: 79061234567
-     *
-     *  A method to send quick sms message, usually used in case you need single at a time.
-     *  @param String message An sms message
-     *  @param String phone   Phone number, for example: 18434481706
-     *  @return String Sample output: {"sms_id":2197871,"status":"NEW"}
-     *
+     * Метод-обёртка для команды sendQuickSms - отправка смс-сообщения без предварительного его создания
+     * $message - текст созданного сообщения
+     * $phone - номер телефона в формате 375291234567
      */
-
-    public function sendQuickSms($message, $phone)
-    {
+    public function sendQuickSms($message, $phone) {
       if(!empty($message) && !empty($phone))
       {
         $params['message'] = $message;
         $params['phone'] = $phone;
         return $this->sendRequest('sendQuickSms', $params);
-
       }
       else
       {
@@ -156,8 +138,7 @@ class SMS_BY
      * Метод-обёртка для команды checkSMS
      * $sms_id - ID отправленного SMS
      */
-    public function checkSMS($sms_id)
-    {
+    public function checkSMS($sms_id) {
         $params['sms_id'] = (integer)$sms_id;
         return $this->sendRequest('checkSMS', $params);
     }
@@ -167,8 +148,7 @@ class SMS_BY
      * $type_id - тип создаваемого объекта пароля, может принимать значения letters, numbers и both
      * $len - длина создаваемого объекта пароля, целое число от 1 до 16
      */
-    public function createPasswordObject($type_id, $len)
-    {
+    public function createPasswordObject($type_id, $len) {
         $params['type_id'] = $type_id;
         $params['len'] = (integer)$len;
         return $this->sendRequest('createPasswordObject', $params);
@@ -180,8 +160,7 @@ class SMS_BY
      * $type_id - тип создаваемого объекта пароля, может принимать значения letters, numbers и both
      * $len - длина создаваемого объекта пароля, целое число от 1 до 16
      */
-    public function editPasswordObject($password_object_id, $type_id, $len)
-    {
+    public function editPasswordObject($password_object_id, $type_id, $len) {
         $params['id'] = (integer)$password_object_id;
         $params['type_id'] = $type_id;
         $params['len'] = (integer)$len;
@@ -192,8 +171,7 @@ class SMS_BY
      * Метод-обёртка для команды deletePasswordObject
      * $password_object_id - ID созданного объекта пароля
      */
-    public function deletePasswordObject($password_object_id)
-    {
+    public function deletePasswordObject($password_object_id) {
         $params['id'] = (integer)$password_object_id;
         return $this->sendRequest('deletePasswordObject', $params);
     }
@@ -201,8 +179,7 @@ class SMS_BY
     /**
      * Метод-обёртка для команды getPasswordObjects
      */
-    public function getPasswordObjects()
-    {
+    public function getPasswordObjects() {
         return $this->sendRequest('getPasswordObjects');
     }
 
@@ -210,8 +187,7 @@ class SMS_BY
      * Метод-обёртка для команды getPasswordObject
      * $password_object_id - ID созданного объекта пароля
      */
-    public function getPasswordObject($password_object_id)
-    {
+    public function getPasswordObject($password_object_id) {
         $params['id'] = (integer)$password_object_id;
         return $this->sendRequest('getPasswordObject', $params);
     }
@@ -223,8 +199,7 @@ class SMS_BY
      * $phone - номер телефона в формате 375291234567
      * $alphaname_id - ID альфа-имени, необязательный параметр
      */
-    public function sendSmsMessageWithCode($message, $password_object_id, $phone, $alphaname_id = 0)
-    {
+    public function sendSmsMessageWithCode($message, $password_object_id, $phone, $alphaname_id = 0) {
         $params['message'] = $message;
         $params['password_object_id'] = (integer)$password_object_id;
         $params['phone'] = $phone;
@@ -236,16 +211,14 @@ class SMS_BY
     /**
      * Метод-обёртка для команды getAlphaNames
      */
-    public function getAlphaNames()
-    {
+    public function getAlphaNames() {
         return $this->sendRequest('getAlphanames');
     }
 
     /**
      * Метод-обёртка для команды getAlphaNameId
      */
-    public function getAlphaNameId($name)
-    {
+    public function getAlphaNameId($name) {
         $params['name'] = $name;
         return $this->sendRequest('getAlphanameId', $params);
     }
@@ -257,8 +230,7 @@ class SMS_BY
      * $attempt - количество попыток для подтверждения кода, если не указано то 3
      * $time_valid - время действия кода подтверждения в секундах, если не указано то 90
      */
-    public function flashCall($phone, $code = '', $attempt = 0, $time_valid = 0)
-    {
+    public function flashCall($phone, $code = '', $attempt = 0, $time_valid = 0) {
         $params['phone'] = $phone;
         if (!empty($code))
             $params['code'] = $code;
@@ -275,12 +247,60 @@ class SMS_BY
      * $code - код подтверждения
      * $fclid - значение fclid из метода flashCall
      */
-    public function confirmFlashCall($phone, $code, $fclid)
-    {
+    public function confirmFlashCall($phone, $code, $fclid) {
         $params['phone'] = $phone;
         $params['code'] = $code;
         $params['fclid'] = $fclid;
         return $this->sendRequest('confirmFlashCall', $params, 'post');
+    }
+
+    /**
+     * Метод-обёртка для команды getVibernames
+     */
+    public function getVibernames() {
+        return $this->sendRequest('getVibernames');
+    }
+
+    /**
+     * Метод-обёртка для команды createViberMessage
+     * $message - текст viber-сообщения
+     * $vibername_id - ID viber-имени
+     */
+    public function createViberMessage($message, $vibername_id) {
+        $params['message'] = $message;
+        $params['vibername_id'] = $vibername_id;
+        return $this->sendRequest('createViberMessage', $params, 'post');
+    }
+
+    /**
+     * Метод-обёртка для команды sendViberMessage
+     * $phone - номер телефона в формате 375291234567
+     * $viber_message_id - ID viber-сообщения из метода createViberMessage
+     */
+    public function sendViberMessage($phone, $viber_message_id) {
+        $params['phone'] = $phone;
+        $params['viber_message_id'] = $viber_message_id;
+        return $this->sendRequest('sendViberMessage', $params, 'post');
+    }
+
+    /**
+     * Метод-обёртка для команды sendQuickViberMessage - отправка viber-сообщения без предварительного его создания
+     * $phone - номер телефона в формате 375291234567
+     * $vibername_id - ID viber-имени
+     * $message - текст viber-сообщения
+     */
+    public function sendQuickViberMessage($phone, $vibername_id, $message) {
+        $params['phone'] = $phone;
+        $params['vibername_id'] = $vibername_id;
+        $params['message'] = $message;
+        return $this->sendRequest('sendQuickViberMessage', $params, 'post');
+    }
+
+    /**
+     * Метод-обёртка для команды getViberMessageList
+     */
+    public function getViberMessageList() {
+        return $this->sendRequest('getViberMessageList');
     }
 
 }
