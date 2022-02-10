@@ -1,6 +1,6 @@
 <?php
-class SMS_BY
-{
+  class SMS_BY
+  {
     private $token;
     private $API_URL = "https://app.sms.by/api/v1/";
 
@@ -297,10 +297,27 @@ class SMS_BY
     }
 
     /**
+     * Метод-обёртка для команды sendViberMessageList
+     * $message - информация об viber-сообщении
+     * $name - название рассылки
+     * $vibername_id - ID viber-имени
+     * $list_id - ID списка рассылки
+     * $d_schedule - планируемое время отправки
+     */
+    public function sendViberMessageList($message, $name, $vibername_id, $list_id, $d_schedule) {
+        $params['name'] = $name;
+        $params['vibername_id'] = $vibername_id;
+        $params['list_id'] = $list_id;
+        $params['d_schedule'] = $d_schedule;
+        $params = array_merge($params, $message);
+        return $this->sendRequest('sendViberMessageList', $params, 'post');
+    }
+
+    /**
      * Метод-обёртка для команды getViberMessageList
      */
     public function getViberMessageList() {
         return $this->sendRequest('getViberMessageList');
     }
 
-}
+  }

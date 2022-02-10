@@ -16,7 +16,6 @@
   $translit = Transliterate::getTransliteration($text);
   _echo($comment, $translit);
 
-
   $string = "Длина этого короткого текста на русском  примерно 70 символов или около того"  ;
   $oSize = new CountSmsParts($string);
   $res = $oSize->checkTextLength($string);
@@ -24,14 +23,16 @@
   _echo("Текст: $string");
   _echo("Вызов функции CountSmsParts->checkTextLength:", "Частей = ".$res['parts'].", длина=".$res['len']);
 
-
-  /** баланс */
   $sms = new SMS_BY($token);
-  $res = $sms->getBalance();
-  _echo("Получаем баланс", "Баланс = " . $res->result[0]->balance . " ". $res->currency);
+
+  /** Получение баланса */
+  if (true) {
+    $res = $sms->getBalance();
+    _echo("Получаем баланс", "Баланс = " . $res->result[0]->balance . " ". $res->currency);
+  }
 
   /** Отправка простого сообщения */
-  if(false) {
+  if (false) {
     $message = 'Привет от sms.by!';
     _echo("Отправка sms-сообщения '$message' на номер: $phone");
     $res = $sms->createSMSMessage($message);
@@ -117,6 +118,25 @@
       _echo("Отправка sms-сообщения '$message' на номер: $phone", "Сообщение успешно отправлено, его ID: {$res->result->viber_id}");
     else
       _echo("Отправка sms-сообщения '$message' на номер: $phone", "Во время отправки сообщения произошла ошибка");
+  }
+
+  /**  Отправка viber-сообщения списку рассылки */
+  if (false) {
+    $message = [  // информация о передаваемом сообщении
+      'type_message' => 'BUTTON',  // тип сообщения
+      'message' => 'Привет от sms.by!',  // текст сообщения
+      'button' => 'Нажми здесь',  // текст кнопки
+      'button_link' => 'https://sms.by'  // ссылка кнопки
+    ];
+    $name = 'Тестовая рассылка';
+    $vibername_id = 0;  // ID вашего viber-имени
+    $list_id = 0;  // ID вашего списка рассылки
+    $d_schedule = '2022-03-01 12:00';
+    $res = $sms->sendViberMessageList($message, $name, $vibername_id, $list_id, $d_schedule);
+    if (isset($res->status) and $res->status=='OK')
+      _echo("Отправка viber-сообщения списку рассылки", "Рассылка успешно создана, её ID: {$res->result->viber_id}");
+    else
+      _echo("Отправка viber-сообщения списку рассылки", "Во время отправки сообщения произошла ошибка");
   }
 
   /**  Получение списка своих viber-сообщений */
