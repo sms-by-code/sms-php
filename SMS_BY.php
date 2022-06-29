@@ -5,7 +5,7 @@
     private $API_URL = "https://app.sms.by/api/v1/";
 
     /**
-     * $token - API ключ
+     * $token - API KEY 
      */
     public function __construct($token) {
        if (!empty($token))
@@ -55,6 +55,7 @@
     }
 
     /**
+     * Error handling 
      * Обрабатывает ошибки.
      * Здесь может быть любой код, обрабатывающий пришедшую по API ошибку, соответствующий вашему приложению.
      * $error - текст ошибки
@@ -64,6 +65,7 @@
     }
 
     /**
+     * Get balance
      * Метод-обёртка для команды getBalance
      */
     public function getBalance() {
@@ -117,6 +119,8 @@
     }
 
     /**
+     * The fastest was to send single sms. Use this method if you send 1 sms to 1 user. If you send 1 message to Many users, please use 
+     *   createSMSMessage and sendSms
      * Метод-обёртка для команды sendQuickSms - отправка смс-сообщения без предварительного его создания
      * $message - текст созданного сообщения
      * $phone - номер телефона в формате 375291234567
@@ -194,10 +198,10 @@
 
     /**
      * Метод-обёртка для команды sendSmsMessageWithCode
-     * $message - текст создаваемого сообщения
-     * $password_object_id - ID созданного объекта пароля
-     * $phone - номер телефона в формате 375291234567
-     * $alphaname_id - ID альфа-имени, необязательный параметр
+     * $message - message text / текст создаваемого сообщения
+     * $password_object_id - ID of created Password Object / ID созданного объекта пароля
+     * $phone - Phone number in international format / номер телефона в формате 375291234567
+     * $alphaname_id - Sender ID (optional) // ID альфа-имени, необязательный параметр
      */
     public function sendSmsMessageWithCode($message, $password_object_id, $phone, $alphaname_id = 0) {
         $params['message'] = $message;
