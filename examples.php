@@ -30,6 +30,14 @@
     _echo("Requesting balance", "Balance = " . $res->result[0]->balance . " ". $res->currency);
   }
 
+  if (true )
+  {
+      $message = "Hello World! Powered by SMS.by"; 
+      $res = $sms->sendQuickSms($message, $phone); 
+      _echo ("Sent sms using sendQuickSms method");
+  }
+  
+
   /** Send simple Sms message / Отправка простого сообщения */
   if (false) {
     $message = 'Hello from SMS.BY!';
