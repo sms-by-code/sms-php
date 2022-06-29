@@ -3,18 +3,17 @@
   require_once('Transliterate.php');
   require_once('CountSmsParts.php');
 
+  // Your API-KEY or token which you can obtain here: https://app.sms.by/user-api/token
   $token = '';  // Код токена вы можете получить здесь: https://app.sms.by/user-api/token
-  $phone = '';  // Номер телефона для теста
+  // Phone number where you will receive all test sms 
+  $phone = '';  // Номер телефона для теста 
 
-  $text = "Заглавная буква в начале текста";
-  $comment = "Пример работы транслитерации строки. \"$text\" ";
+ 
+  $text = "Заглавная буква в начале текста"; // place here any sample text 
+  $comment = "Пример работы транслитерации строки. \"$text\" "; // transliteration of russian text to english 
   $translit = Transliterate::getTransliteration($text);
   _echo($comment, $translit);
 
-  $text = "прописная буква в начале текста";
-  $comment = "Пример работы транслитерации строки. \"$text\" ";
-  $translit = Transliterate::getTransliteration($text);
-  _echo($comment, $translit);
 
   $string = "Длина этого короткого текста на русском  примерно 70 символов или около того"  ;
   $oSize = new CountSmsParts($string);
@@ -25,16 +24,16 @@
 
   $sms = new SMS_BY($token);
 
-  /** Получение баланса */
+  /** Get Balance / Получение баланса  */
   if (true) {
     $res = $sms->getBalance();
-    _echo("Получаем баланс", "Баланс = " . $res->result[0]->balance . " ". $res->currency);
+    _echo("Requesting balance", "Balance = " . $res->result[0]->balance . " ". $res->currency);
   }
 
-  /** Отправка простого сообщения */
+  /** Send simple Sms message / Отправка простого сообщения */
   if (false) {
-    $message = 'Привет от sms.by!';
-    _echo("Отправка sms-сообщения '$message' на номер: $phone");
+    $message = 'Hello from SMS.BY!';
+    _echo("Send sms-message '$message' на номер: $phone");
     $res = $sms->createSMSMessage($message);
     $message_id = $res->message_id;
     $res = $sms->sendSms($message_id, $phone);
@@ -59,7 +58,7 @@
       _echo("Сообщение успешно отправлено, его ID: {$res[0]->sms_id}");
   }
 
-  /**  Получение списка своих сообщений */
+  /**  Get a list of your messages / Получение списка своих сообщений */
   if (false) {
     $messages = $sms->getMessagesList();
     echo "<pre>";
@@ -67,7 +66,7 @@
     echo "</pre>";
   }
 
-  /**  Получение списка альфа-имён */
+  /** Get a list of Sender IDs Получение списка альфа-имён */
   if (false) {
     $alpha_names = $sms->getAlphaNames();
     echo "<pre>";
