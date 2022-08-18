@@ -2,7 +2,8 @@
   class SMS_BY
   {
     private $token;
-    private $API_URL = "https://app.sms.by/api/v1/";
+    private $API_URL    = "https://app.sms.by/api/v1/";
+    private $API_URL_v2 = "https://app.sms.by/api/v2/";
 
     /**
      * $token - API KEY 
