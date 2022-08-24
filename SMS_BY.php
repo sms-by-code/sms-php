@@ -301,6 +301,52 @@
         return $this->sendRequest('sendQuickViberMessage', $params, 'post');
     }
 
+
+        /**
+     * Метод-обёртка для команды sendQuickViberMessageWithImage - отправка viber-сообщения без предварительного его создания
+     * $phone - номер телефона в формате 375291234567
+     * $vibername_id - ID viber-имени
+     * $message - текст viber-сообщения
+     */
+    public function sendQuickViberMessageWithImage($phone, $vibername_id, $message, $type_message, $image, $button, $button_link) {
+        if ($image !== "") {
+            $mime = mime_content_type($image);
+            $img = new CURLFile($image, $mime, 'image.jpg');
+        }
+        if ($type_message === "TEXT") {
+            $data = array(
+                'phone' => $phone,
+                'vibername_id' => $vibername_id,
+                'message' => $message,
+                'type_message' => $type_message,
+              );
+        } elseif ($type_message === "IMAGE") {
+            $data = array(
+                'phone' => $phone,
+                'vibername_id' => $vibername_id,
+                'message' => $message,
+                'type_message' => $type_message,
+                'image' => $img ?? "",
+            );
+        } else {
+            $data = array(
+                'phone' => $phone,
+                'vibername_id' => $vibername_id,
+                'message' => $message,
+                'type_message' => $type_message,
+                'image' => $img,
+                'button' => $button,
+                'button_link' => $button_link,
+              );
+        }
+          $ch = curl_init($this->API_URL_v2 . "sendQuickViberMessage?token=" . $this->token);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_POST, true);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+          curl_exec($ch);
+          curl_close($ch);
+    }
+
     /**
      * Метод-обёртка для команды sendViberMessageList
      * $message - информация об viber-сообщении
