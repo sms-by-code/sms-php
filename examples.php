@@ -25,12 +25,12 @@
   $sms = new SMS_BY($token);
 
   /** Get Balance / Получение баланса  */
-  if (true) {
+  if (false) {
     $res = $sms->getBalance();
     _echo("Requesting balance", "Balance = " . $res->result[0]->balance . " ". $res->currency);
   }
 
-  if (true )
+  if (false)
   {
       $message = "Hello World! Powered by SMS.by"; 
       $res = $sms->sendQuickSms($message, $phone); 
@@ -126,6 +126,18 @@
     else
       _echo("Отправка sms-сообщения '$message' на номер: $phone", "Во время отправки сообщения произошла ошибка");
   }
+
+    /** Отправка простого viber-сообщения с картинкой */
+    if(true) {
+      $message = 'Привет от sms.by!';
+      $vibername_id = 0;  // ID вашего viber-имени
+      $type_message = 'TEXT'; // Message type
+      $image = 'picture.jpg'; // Image
+      // $button = ''; // Button
+      // $button_link = ''; // Link
+
+      $sms->sendQuickViberMessageWithImage($phone, $vibername_id, $message, $type_message, $image, $button, $button_link);
+    }
 
   /**  Отправка viber-сообщения списку рассылки */
   if (false) {
