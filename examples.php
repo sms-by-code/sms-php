@@ -5,38 +5,35 @@
 
   // Your API-KEY or token which you can obtain here: https://app.sms.by/user-api/token
   $token = '';  // Код токена вы можете получить здесь: https://app.sms.by/user-api/token
-  // Phone number where you will receive all test sms 
-  $phone = '';  // Номер телефона для теста 
+  // Phone number where you will receive all test sms
+  $phone = '';  // Номер телефона для теста
 
- 
-  $text = "Заглавная буква в начале текста"; // place here any sample text 
-  $comment = "Пример работы транслитерации строки. \"$text\" "; // transliteration of russian text to english 
+
+  $text = "Заглавная буква в начале текста"; // place here any sample text
+  $comment = "Пример работы транслитерации строки. \"$text\" "; // transliteration of russian text to english
   $translit = Transliterate::getTransliteration($text);
   _echo($comment, $translit);
 
 
-  $string = "Длина этого короткого текста на русском  примерно 70 символов или около того"  ;
+  $string = "Длина этого короткого текста на русском  примерно 70 символов или около того";
   $oSize = new CountSmsParts($string);
   $res = $oSize->checkTextLength($string);
-  _echo("Определяем размер сообщения");
-  _echo("Текст: $string");
-  _echo("Вызов функции CountSmsParts->checkTextLength:", "Частей = ".$res['parts'].", длина=".$res['len']);
+  _echo("Определяем размер сообщения \"$string\"", "Частей = ".$res['parts'].", длина=".$res['len']);
 
   $sms = new SMS_BY($token);
 
   /** Get Balance / Получение баланса  */
-  if (false) {
+  if (true) {
     $res = $sms->getBalance();
-    _echo("Requesting balance", "Balance = " . $res->result[0]->balance . " ". $res->currency);
+    _echo("Requesting balance", "Balance = ".$res->result[0]->balance." ".$res->currency);
   }
 
-  if (false)
-  {
-      $message = "Hello World! Powered by SMS.by"; 
-      $res = $sms->sendQuickSms($message, $phone); 
-      _echo ("Sent sms using sendQuickSms method");
+
+  if (false) {
+    $message = "Hello World! Powered by SMS.by";
+    $res = $sms->sendQuickSms($message, $phone);
+    _echo ("Sent sms using sendQuickSms method");
   }
-  
 
   /** Send simple Sms message / Отправка простого сообщения */
   if (false) {
@@ -74,7 +71,7 @@
     echo "</pre>";
   }
 
-  /** Get a list of Sender IDs Получение списка альфа-имён */
+  /** Get a list of Sender IDs / Получение списка альфа-имён */
   if (false) {
     $alpha_names = $sms->getAlphaNames();
     echo "<pre>";
@@ -117,7 +114,7 @@
   }
 
   /** Отправка простого viber-сообщения */
-  if(false) {
+  if (false) {
     $message = 'Привет от sms.by!';
     $vibername_id = 0;  // ID вашего viber-имени
     $res = $sms->sendQuickViberMessage($phone, $vibername_id, $message);
@@ -127,17 +124,17 @@
       _echo("Отправка sms-сообщения '$message' на номер: $phone", "Во время отправки сообщения произошла ошибка");
   }
 
-    /** Отправка простого viber-сообщения с картинкой */
-    if(true) {
-      $message = 'Привет от sms.by!';
-      $vibername_id = 0;  // ID вашего viber-имени
-      $type_message = 'TEXT'; // Message type
-      $image = 'picture.jpg'; // Image
-      // $button = ''; // Button
-      // $button_link = ''; // Link
+  /** Отправка простого viber-сообщения с картинкой */
+  if (false) {
+    $message = 'Привет от sms.by!';
+    $vibername_id = 0;  // ID вашего viber-имени
+    $type_message = 'TEXT'; // Message type
+    $image = 'picture.jpg'; // Image
+    // $button = ''; // Button
+    // $button_link = ''; // Link
 
-      $sms->sendQuickViberMessageWithImage($phone, $vibername_id, $message, $type_message, $image, $button, $button_link);
-    }
+    $sms->sendQuickViberMessageWithImage($phone, $vibername_id, $message, $type_message, $image, $button, $button_link);
+  }
 
   /**  Отправка viber-сообщения списку рассылки */
   if (false) {
